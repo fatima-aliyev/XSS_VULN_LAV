@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Reflected XSS Lab{% endblock %}
+{% block content %}
+<h2>Reflected XSS Simulation</h2>
+<p>Enter your username below. Try injecting a script in the username to see reflected XSS.</p>
+
+<form method="post" action="{{ url_for('xss_reflected') }}">
+    <label for="username">Username:</label><br/>
+    <input type="text" id="username" name="username" value="{{ username | safe }}" autocomplete="off" required/><br/><br/>
+    <button type="submit">Submit</button>
+</form>
+
+{% if username %}
+<p>Your username is:{{ username | safe }}</p>
+{% endif %}
+
+<div class="info-box">
+    <h3>Payload Examples (click to test):</h3>
+    <ul>
+        <li><a href="{{ url_for('xss_reflected', username='<script>alert(1)</script>') }}">&lt;script&gt;alert(1)&lt;/script&gt;</a></li>
+        <li><a href="{{ url_for('xss_reflected', username='" onmouseover="alert(1)"') }}">" onmouseover="alert(1)"</a></li>
+        <li><a href="{{ url_for('xss_reflected', username='&lt;img src=x onerror=alert(1)&gt;') }}">&lt;img src=x onerror=alert(1)&gt;</a></li>
+
+        <!-- Advanced Bypass Payloads -->
+        <li><a href="{{ url_for('xss_reflected', username='%3Cscript%3Ealert(%221%22)%3C%2Fscript%3E') }}">URL Encoded: %3Cscript%3Ealert("1")%3C/script%3E</a></li>
+        <li><a href="{{ url_for('xss_reflected', username='&amp;lt;script&amp;gt;alert(1)&amp;lt;/script&amp;gt;') }}">HTML Entities: &lt;script&gt;alert(1)&lt;/script&gt;</a></li>
+        <li><a href="{{ url_for('xss_reflected', username='&lt;img src=x onerror=alert(1)&gt;') }}">Event Handler: &lt;img src=x onerror=alert(1)&gt;</a></li>
+        <li><a href="{{ url_for('xss_reflected', username='&lt;a href=javascript:alert(1)&gt;Click&lt;/a&gt;') }}">JavaScript Protocol: &lt;a href=javascript:alert(1)&gt;Click&lt;/a&gt;</a></li>
+        <li><a href="{{ url_for('xss_reflected', username='&lt;scr&lt;script&gt;ipt&gt;alert(1)&lt;/scr&lt;script&gt;ipt&gt;') }}">Broken Script Tag Bypass (escaped)</a></li>
+    </ul>
+</div>
+
+{% endblock %}
+
+http://localhost:5000/xss/reflected?username=<script>alert('XSS')</script>
