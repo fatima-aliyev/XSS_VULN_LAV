@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block title %}XSS Labs Home{% endblock %}
+{% block content %}
+<h2>XSS Vulnerability Labs</h2>
+<p>Choose one of the labs to test different XSS types:</p>
+<ul>
+    <li><a href="{{ url_for('xss_reflected') }}">Reflected XSS Lab</a></li>
+    <li><a href="{{ url_for('xss_stored') }}">Stored XSS Lab</a></li>
+    <li><a href="{{ url_for('xss_dom') }}">DOM-based XSS Lab</a></li>
+</ul>
+{% endblock %}
