@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Stored XSS Lab{% endblock %}
+{% block content %}
+<h2>Stored XSS Simulation</h2>
+
+<form method="post" action="{{ url_for('xss_stored') }}">
+    <label for="username">Your Name:</label><br/>
+    <input type="text" id="username" name="username" required/><br/><br/>
+
+    <label for="book_title">Book Title:</label><br/>
+    <input type="text" id="book_title" name="book_title" required/><br/><br/>
+
+    <label for="review">Your Review:</label><br/>
+    <textarea id="review" name="review" rows="5" required></textarea><br/><br/>
+
+    <button type="submit">Submit Review</button>
+</form>
+
+<hr/>
+
+<h3>All Reviews</h3>
+<ul class="reviews-list">
+    {% for r in reviews %}
+    <li>
+        <strong>{{ r['username'] | safe }} reviewed <em>{{ r['book_title'] | safe }}</em>:</strong>
+        <p onmouseover="alert('Review hovered: {{ r['review'] | safe }}')">{{ r['review'] | safe }}</p>
+    </li>
+    {% else %}
+    <li>No reviews yet.</li>
+    {% endfor %}
+</ul>
+
+<div class="info-box">
+    <h3>Sample Payloads to Submit:</h3>
+    <ul>
+        <li>&lt;script&gt;alert('XSS')&lt;/script&gt;</li>
+        <li>&lt;img src=x onerror=alert('XSS')&gt;</li>
+        <li>&lt;svg onload=alert('XSS')&gt;</li>
+        <li>&lt;iframe src="javascript:alert('XSS')"&gt;&lt;/iframe&gt;</li>
+    </ul>
+</div>
+{% endblock %}
