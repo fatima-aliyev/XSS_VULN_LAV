@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}DOM-based XSS Lab{% endblock %}
+{% block content %}
+<h2>DOM-based XSS Simulation</h2>
+
+<p id="welcome-message">Loading user data...</p>
+
+<div class="info-box">
+    <h3>Try the following payloads by editing the URL fragment (#):</h3>
+    <ul>
+        <li><code>#user=&lt;img src=x onerror=alert('XSS')&gt;&extra=alert('DOM XSS')</code></li>
+        <li><code>#user=&lt;svg onload=alert('XSS')&gt;</code></li>
+        <li><code>#user=&lt;iframe src="javascript:alert('XSS')"&gt;&extra=alert('DOM XSS')</code></li>
+    </ul>
+    <p>Example URL:<br/>
+    <a href="{{ url_for('xss_dom') }}#user=%3Cimg%20src=x%20onerror=alert('XSS')%3E&extra=alert('DOM%20XSS')">
+        Click to test DOM XSS payload</a>
+    </p>
+</div>
+
+<script>
+function getParamsFromHash() {
+    const hash = window.location.hash.substring(1);
+    const params = new URLSearchParams(hash);
+    return params;
+}
+
+function displayUserInfo() {
+    const params = getParamsFromHash();
+    const user = params.get('user') || 'Guest';
+    const extra = params.get('extra') || '';
+
+  
+    document.getElementById('welcome-message').innerHTML = `Welcome, <strong>${user}</strong>!`;
+
+ 
+    if(extra) {
+        eval(extra);
+    }
+}
+
+window.onload = displayUserInfo;
+</script>
+
+{% endblock %}
