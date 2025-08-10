@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>BookReview - {% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+</head>
+<body>
+<nav>
+    <div class="container">
+        <a href="{{ url_for('home') }}" class="logo">BookReview XSS Lab</a>
+        <ul class="nav-links">
+            <li><a href="{{ url_for('home') }}">Home</a></li>
+            <li><a href="{{ url_for('xss_reflected') }}">Reflected XSS</a></li>
+            <li><a href="{{ url_for('xss_stored') }}">Stored XSS</a></li>
+            <li><a href="{{ url_for('xss_dom') }}">DOM-based XSS</a></li>
+        </ul>
+    </div>
+</nav>
+
+<main class="container">
+    {% block content %}{% endblock %}
+</main>
+
+<footer>
+    <div class="container">
+        <p>© 2025 BookReview XSS Lab. For educational purposes only.</p>
+    </div>
+</footer>
+</body>
+</html>
